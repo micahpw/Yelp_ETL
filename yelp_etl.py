@@ -1,4 +1,3 @@
-#%%
 import pandas as pd
 import json
 import numpy as np
@@ -10,7 +9,6 @@ import pandas as pd
 import sys
 import requests 
 import zipfile
-
 import argparse
 
 
@@ -25,10 +23,10 @@ class YelpReviews():
 
     def __init__(self, root, pattern):
         super().__init__()
-        self.root = root
-        self.business_composition_pattern = pattern    
-        self.sqlite_path = '/'.join([self.root,'user.sqlite'])        
-        self.Business_Comp = None
+        self.root = root #Set root directory for data
+        self.business_composition_pattern = pattern  #match pattern for json files to load
+        self.sqlite_path = '/'.join([self.root,'user.sqlite']) #path to sqlite db    
+        self.Business_Comp = None #objects to use as cache
         self.reviews = None
 
 
@@ -109,8 +107,8 @@ class YelpReviews():
 
         return df_all
 
-    def MeanReviewsByBusiness(self):
 
+    def MeanReviewsByBusiness(self):
         df = self.GetReviews()        
         reviews = df[['Business - Id', 'Review - Stars', 'Review - Votes Cool', 'Review - Votes Funny', 'Review - Votes Useful']]    
         business_comp = self.GetBusinessComp()
@@ -120,7 +118,7 @@ class YelpReviews():
     def MeanReviewsByZipCode(self, n=5):
 
         bus_comp = self.GetBusinessComp()
-        bus_comp['ZipCode'] = bus_comp['Business - Address'].str.split(' ').apply(lambda x: x[-1])
+        bus_comp['ZipCode'] = bus_comp['Business - Address'].str.split(' ').apply(lambda x: x[-1]) #Split the address by spaces and get last object.
 
         reviews = self.GetReviews()
 
